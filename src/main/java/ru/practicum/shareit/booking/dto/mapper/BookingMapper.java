@@ -1,15 +1,23 @@
 package ru.practicum.shareit.booking.dto.mapper;
-import org.springframework.jdbc.core.RowMapper;
+
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 @Component
-public class BookingMapper implements RowMapper<Booking> {
-    @Override
-    public Booking mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return null;
+public class BookingMapper {
+    public static BookingDto toDto(Booking booking) {
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setItemId(booking.getItem().getId());
+        bookingDto.setStart(booking.getStart());
+        bookingDto.setEnd(booking.getEnd());
+        return bookingDto;
+    }
+
+    public static Booking toBooking(BookingDto dto) {
+        Booking booking = new Booking();
+        booking.setStart(dto.getStart());
+        booking.setEnd(dto.getEnd());
+        return booking;
     }
 }
