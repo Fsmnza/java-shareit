@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ItemRequestService {
     ItemRequest createRequest(ItemRequest request);
+
     List<ItemRequest> getAllRequests();
 }

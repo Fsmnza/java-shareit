@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
 
-
 import java.util.List;
 
 @Service
