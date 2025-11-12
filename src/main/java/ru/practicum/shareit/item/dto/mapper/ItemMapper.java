@@ -1,16 +1,73 @@
 package ru.practicum.shareit.item.dto.mapper;
 
+import ru.practicum.shareit.booking.dto.BookingInfoDto;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.model.Status;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemMapper {
-    public static ItemDto toDto(Item item) {
-        ItemDto dto = new ItemDto();
-        dto.setId(item.getId());
-        dto.setName(item.getName());
-        dto.setDescription(item.getDescription());
-        dto.setAvailable(item.getStatus() == Status.AVAILABLE);
-        return dto;
+    public static ItemDto toItemDto(Item item) {
+        if (item == null) return null;
+
+        Long requestId = item.getRequest() != null ? item.getRequest().getId() : null;
+        Long ownerId = item.getOwner() != null ? item.getOwner().getId() : null;
+
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .ownerId(ownerId)
+                .requestId(requestId)
+                .lastBooking(null)
+                .nextBooking(null)
+                .comments(List.of())
+                .build();
+    }
+
+    public static ItemDto toItemDto(Item item, Booking lastBooking, Booking nextBooking, List<Comment> comments) {
+        if (item == null) return null;
+
+        Long requestId = item.getRequest() != null ? item.getRequest().getId() : null;
+        Long ownerId = item.getOwner() != null ? item.getOwner().getId() : null;
+
+        List<CommentDto> commentDtos = comments != null
+                ? comments.stream().map(CommentMapper::toDto).collect(Collectors.toList())
+                : List.of();
+
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .ownerId(ownerId)
+                .requestId(requestId)
+                .lastBooking(lastBooking != null
+                        ? new BookingInfoDto(lastBooking.getId(), lastBooking.getBookingUser().getId())
+                        : null)
+                .nextBooking(nextBooking != null
+                        ? new BookingInfoDto(nextBooking.getId(), nextBooking.getBookingUser().getId())
+                        : null)
+                .comments(commentDtos)
+                .build();
+    }
+
+    public static Item toItem(ItemDto dto, User owner, ItemRequest request) {
+        if (dto == null) return null;
+        return Item.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .available(dto.getAvailable())
+                .owner(owner)
+                .request(request)
+                .build();
     }
 }

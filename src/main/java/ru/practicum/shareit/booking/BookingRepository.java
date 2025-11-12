@@ -1,22 +1,51 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.Status;
+import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
-public class BookingRepository {
-    private final List<Booking> bookings = new ArrayList<>();
-    private Long nextId = 1L;
+public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    public Booking createBooking(Booking booking) {
-        booking.setId(nextId++);
-        bookings.add(booking);
-        return booking;
-    }
+    List<Booking> findAllByBookingUserIdOrderByStartDesc(Long bookerId);
 
-    public List<Booking> getAllBookings() {
-        return new ArrayList<>(bookings);
-    }
+    List<Booking> findAllByItemOwnerIdOrderByStartDesc(Long ownerId);
+
+    List<Booking> findByBookingUserIdAndStatusOrderByStartDesc(Long bookerId, Status status);
+
+    List<Booking> findByItemOwnerIdAndStatusOrderByStartDesc(Long ownerId, Status status);
+
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findCurrentByBooker(@Param("userId") Long userId);
+
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findPastByBooker(@Param("userId") Long userId);
+
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findFutureByBooker(@Param("userId") Long userId);
+
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findCurrentByOwner(@Param("ownerId") Long ownerId);
+
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findPastByOwner(@Param("ownerId") Long ownerId);
+
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findFutureByOwner(@Param("ownerId") Long ownerId);
+
+    @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    List<Booking> findLastBooking(@Param("itemId") Long itemId, Pageable pageable);
+
+    @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start ASC")
+    List<Booking> findNextBooking(@Param("itemId") Long itemId, Pageable pageable);
+
+    boolean existsByItemIdAndBookingUserIdAndStatusAndEndBefore(Long itemId, Long bookerId,
+                                                                Status status, LocalDateTime dateTime);
 }
