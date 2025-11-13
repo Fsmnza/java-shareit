@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
@@ -22,7 +21,9 @@ import ru.practicum.shareit.exception.NotAuthorizedException;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,16 +90,26 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemsByOwner(Long userId) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
-
         List<Item> items = itemRepository.findByOwnerId(owner.getId());
-
+        List<Long> itemIds = items.stream().map(Item::getId).toList();
+        List<Comment> allComments = commentRepository.findByItemIdIn(itemIds);
+        Map<Long, List<Comment>> commentsMap = allComments.stream()
+                .collect(Collectors.groupingBy(c -> c.getItem().getId()));
+        List<Booking> allBookings = bookingRepository.findByItemIdInAndStatus(itemIds, Status.APPROVED);
+        Map<Long, List<Booking>> bookingsMap = allBookings.stream()
+                .collect(Collectors.groupingBy(b -> b.getItem().getId()));
         return items.stream()
                 .map(item -> {
-                    List<Comment> comments = commentRepository.findByItemId(item.getId());
-                    Booking lastBooking = bookingRepository.findLastBooking(item.getId(), Pageable.ofSize(1))
-                            .stream().findFirst().orElse(null);
-                    Booking nextBooking = bookingRepository.findNextBooking(item.getId(), Pageable.ofSize(1))
-                            .stream().findFirst().orElse(null);
+                    List<Comment> comments = commentsMap.getOrDefault(item.getId(), List.of());
+                    List<Booking> bookings = bookingsMap.getOrDefault(item.getId(), List.of());
+                    Booking lastBooking = bookings.stream()
+                            .filter(b -> b.getStart().isBefore(LocalDateTime.now()))
+                            .max(Comparator.comparing(Booking::getStart))
+                            .orElse(null);
+                    Booking nextBooking = bookings.stream()
+                            .filter(b -> b.getStart().isAfter(LocalDateTime.now()))
+                            .min(Comparator.comparing(Booking::getStart))
+                            .orElse(null);
                     return ItemMapper.toItemDto(item, lastBooking, nextBooking, comments);
                 })
                 .collect(Collectors.toList());

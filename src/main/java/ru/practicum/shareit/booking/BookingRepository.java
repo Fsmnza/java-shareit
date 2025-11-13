@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,12 +39,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start DESC")
     List<Booking> findFutureByOwner(@Param("ownerId") Long ownerId);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
-    List<Booking> findLastBooking(@Param("itemId") Long itemId, Pageable pageable);
-
-    @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start ASC")
-    List<Booking> findNextBooking(@Param("itemId") Long itemId, Pageable pageable);
-
     boolean existsByItemIdAndBookingUserIdAndStatusAndEndBefore(Long itemId, Long bookerId,
                                                                 Status status, LocalDateTime dateTime);
+    List<Booking> findByItemIdInAndStatus(List<Long> itemIds, Status status);
+
 }
