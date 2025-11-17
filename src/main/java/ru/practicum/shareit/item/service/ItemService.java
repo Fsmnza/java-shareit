@@ -1,20 +1,21 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.exception.NotAuthorizedException;
 
 import java.util.List;
 
 public interface ItemService {
-    List<Item> getAllItems();
+    ItemDto createItem(Long userId, ItemDto dto);
 
-    Item getById(long id);
+    ItemDto updateItem(Long userId, Long itemId, ItemDto dto) throws NotAuthorizedException;
 
-    Item createNewItem(ItemDto item, long newId);
+    ItemDto getItemById(Long userId, Long itemId);
 
-    List<Item> search(String text);
+    List<ItemDto> getItemsByOwner(Long userId);
 
-    Item updateItem(ItemDto dto, long id, long userId);
+    List<ItemDto> searchItems(String text);
 
-    Item deleteItemById(long id);
+    CommentDto addComment(Long userId, Long itemId, CommentDto commentDto);
 }
