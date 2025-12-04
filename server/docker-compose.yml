@@ -14,7 +14,7 @@ services:
 
   shareit-server:
     build:
-      context: .      
+      context: .      # корень проекта
       dockerfile: server/Dockerfile
     ports:
       - "9090:9090"
