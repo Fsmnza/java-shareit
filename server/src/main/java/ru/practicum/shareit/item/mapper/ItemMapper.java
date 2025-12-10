@@ -32,7 +32,8 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemDto toItemDto(Item item, Booking lastBooking, Booking nextBooking, List<Comment> comments) {
+    public static ItemDto toItemDto(Item item, Booking lastBooking,
+                                    Booking nextBooking, List<Comment> comments) {
         if (item == null) return null;
 
         Long requestId = item.getRequest() != null ? item.getRequest().getId() : null;

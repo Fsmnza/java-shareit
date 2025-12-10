@@ -66,7 +66,8 @@ public class UserServiceImpl implements UserService {
         if (dto.getEmail() != null) {
             userRepository.findByEmail(dto.getEmail()).ifPresent(existing -> {
                 if (!existing.getId().equals(id)) {
-                    throw new DuplicatedDataException("Email уже используется другим пользователем: " + dto.getEmail());
+                    throw new DuplicatedDataException("Email уже используется другим пользователем: "
+                                                      + dto.getEmail());
                 }
             });
             user.setEmail(dto.getEmail());

@@ -21,22 +21,28 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByItemOwnerIdAndStatusOrderByStartDesc(Long ownerId, Status status);
 
-    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start <= CURRENT_TIMESTAMP" +
+           " AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
     List<Booking> findCurrentByBooker(@Param("userId") Long userId);
 
-    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.end < CURRENT_TIMESTAMP " +
+           "ORDER BY b.start DESC")
     List<Booking> findPastByBooker(@Param("userId") Long userId);
 
-    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.bookingUser.id = :userId AND b.start > CURRENT_TIMESTAMP " +
+           "ORDER BY b.start DESC")
     List<Booking> findFutureByBooker(@Param("userId") Long userId);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start " +
+           "<= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP ORDER BY b.start DESC")
     List<Booking> findCurrentByOwner(@Param("ownerId") Long ownerId);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.end < CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.end < CURRENT_TIMESTAMP " +
+           "ORDER BY b.start DESC")
     List<Booking> findPastByOwner(@Param("ownerId") Long ownerId);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start > CURRENT_TIMESTAMP ORDER BY b.start DESC")
+    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = :ownerId AND b.start > CURRENT_TIMESTAMP " +
+           "ORDER BY b.start DESC")
     List<Booking> findFutureByOwner(@Param("ownerId") Long ownerId);
 
     boolean existsByItemIdAndBookingUserIdAndStatusAndEndBefore(Long itemId, Long bookerId,

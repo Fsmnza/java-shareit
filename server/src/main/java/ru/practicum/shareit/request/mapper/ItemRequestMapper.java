@@ -15,7 +15,8 @@ public class ItemRequestMapper {
 
         List<ItemRequestResponseDto> responses = items == null ? List.of() :
                 items.stream()
-                        .map(item -> new ItemRequestResponseDto(item.getId(), item.getName(), item.getOwner().getId()))
+                        .map(item -> new ItemRequestResponseDto(item.getId(),
+                                item.getName(), item.getOwner().getId()))
                         .collect(Collectors.toList());
 
         return ItemRequestDto.builder()
