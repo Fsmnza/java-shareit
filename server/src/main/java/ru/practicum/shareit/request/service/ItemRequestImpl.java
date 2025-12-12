@@ -27,7 +27,7 @@ public class ItemRequestImpl implements ItemRequestService {
 
     @Override
     @Transactional
-    public ItemRequestDto createRequest(Long userId, ItemRequestDto dto) {
+    public ItemRequestDto createRequest(final Long userId, ItemRequestDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
         if (dto.getDescription() == null || dto.getDescription().isBlank()) {
@@ -42,22 +42,19 @@ public class ItemRequestImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequestDto> getRequestsByUser(Long userId) {
+    public List<ItemRequestDto> getRequestsByUser(final Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId).stream()
                 .map(req -> {
                     List<Item> items = itemRepository.findByRequestId(req.getId());
-//                    if (items == null) {
-//                        items = new ArrayList<>();
-//                    }
                     return ItemRequestMapper.toDto(req, items);
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ItemRequestDto> getAllRequests(Long userId) {
+    public List<ItemRequestDto> getAllRequests(final Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
 
@@ -70,7 +67,7 @@ public class ItemRequestImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestDto getRequestById(Long userId, Long requestId) {
+    public ItemRequestDto getRequestById(final Long userId, final Long requestId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
         ItemRequest request = requestRepository.findById(requestId)

@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDto createBooking(Long userId, BookingDto dto) {
+    public BookingResponseDto createBooking(final Long userId, final BookingDto dto) {
         User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
         Item item = itemRepository.findById(dto.getItemId())
@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponseDto approveBooking(Long ownerId, Long bookingId, boolean approved) {
+    public BookingResponseDto approveBooking(final Long ownerId, final Long bookingId, final boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование не найдено: " + bookingId));
         if (!booking.getItem().getOwner().getId().equals(ownerId)) {
@@ -60,7 +60,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponseDto getBookingById(Long userId, Long bookingId) {
+    public BookingResponseDto getBookingById(final Long userId, final Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование не найдено: " + bookingId));
         if (!booking.getBookingUser().getId().equals(userId) &&
@@ -71,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getBookingsByBooker(Long userId, BookingState state) {
+    public List<BookingResponseDto> getBookingsByBooker(final Long userId, final BookingState state) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден: " + userId);
         }
@@ -80,8 +80,10 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT -> bookings = bookingRepository.findCurrentByBooker(userId);
             case PAST -> bookings = bookingRepository.findPastByBooker(userId);
             case FUTURE -> bookings = bookingRepository.findFutureByBooker(userId);
-            case WAITING -> bookings = bookingRepository.findByBookingUserIdAndStatusOrderByStartDesc(userId, Status.WAITING);
-            case REJECTED -> bookings = bookingRepository.findByBookingUserIdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+            case WAITING -> bookings = bookingRepository.findByBookingUserIdAndStatusOrderByStartDesc
+                    (userId, Status.WAITING);
+            case REJECTED -> bookings = bookingRepository.findByBookingUserIdAndStatusOrderByStartDesc(
+                    userId, Status.REJECTED);
             default -> bookings = bookingRepository.findAllByBookingUserIdOrderByStartDesc(userId);
         }
         return bookings.stream()
@@ -90,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getBookingsForOwner(Long userId, BookingState state) {
+    public List<BookingResponseDto> getBookingsForOwner(final Long userId, final BookingState state) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден: " + userId);
         }
@@ -99,8 +101,10 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT -> bookings = bookingRepository.findCurrentByOwner(userId);
             case PAST -> bookings = bookingRepository.findPastByOwner(userId);
             case FUTURE -> bookings = bookingRepository.findFutureByOwner(userId);
-            case WAITING -> bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.WAITING);
-            case REJECTED -> bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+            case WAITING -> bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc
+                    (userId, Status.WAITING);
+            case REJECTED -> bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc
+                    (userId, Status.REJECTED);
             default -> bookings = bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId);
         }
         return bookings.stream()

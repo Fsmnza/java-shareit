@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getById(long id) {
+    public UserDto getById(final long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + id));
         return UserMapper.toUserDto(user);
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto removeNyId(long id) {
+    public UserDto removeNyId(final long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + id));
         userRepository.deleteById(id);
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto createUser(UserDto dto) {
+    public UserDto createUser(final UserDto dto) {
         userRepository.findByEmail(dto.getEmail()).ifPresent(u -> {
             throw new DuplicatedDataException("Email уже используется: " + dto.getEmail());
         });
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto updateUserById(UserDto dto, long id) {
+    public UserDto updateUserById(final UserDto dto, final long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + id));
         if (dto.getName() != null) {
