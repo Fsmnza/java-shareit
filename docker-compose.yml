@@ -11,10 +11,16 @@ services:
       - "5440:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U malika"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   shareit-server:
     build:
-      context: .      
+      context: .
       dockerfile: server/Dockerfile
     ports:
       - "9090:9090"
@@ -23,7 +29,8 @@ services:
       SPRING_DATASOURCE_USERNAME: malika
       SPRING_DATASOURCE_PASSWORD: password
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   shareit-gateway:
     build:
