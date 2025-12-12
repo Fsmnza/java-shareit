@@ -16,9 +16,6 @@ public final class BookingController {
 
     private final BookingService service;
 
-    /**
-     * Создать новое бронирование.
-     */
     @PostMapping
     public ResponseEntity<BookingResponseDto> createBooking(
             @RequestHeader("X-Sharer-User-Id") final Long userId,
@@ -26,9 +23,6 @@ public final class BookingController {
         return ResponseEntity.ok(service.createBooking(userId, dto));
     }
 
-    /**
-     * Подтвердить или отклонить бронирование владельцем.
-     */
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> approveBooking(
             @RequestHeader("X-Sharer-User-Id") final Long ownerId,
@@ -37,9 +31,6 @@ public final class BookingController {
         return ResponseEntity.ok(service.approveBooking(ownerId, bookingId, approved));
     }
 
-    /**
-     * Получить бронирование по идентификатору.
-     */
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> getBooking(
             @RequestHeader("X-Sharer-User-Id") final Long userId,
@@ -47,9 +38,6 @@ public final class BookingController {
         return ResponseEntity.ok(service.getBookingById(userId, bookingId));
     }
 
-    /**
-     * Получить все бронирования пользователя по статусу.
-     */
     @GetMapping
     public ResponseEntity<List<BookingResponseDto>> getBookingsByBooker(
             @RequestHeader("X-Sharer-User-Id") final Long userId,
@@ -58,9 +46,6 @@ public final class BookingController {
         return ResponseEntity.ok(service.getBookingsByBooker(userId, bookingState));
     }
 
-    /**
-     * Получить все бронирования вещей пользователя по статусу.
-     */
     @GetMapping("/owner")
     public ResponseEntity<List<BookingResponseDto>> getBookingsForOwner(
             @RequestHeader("X-Sharer-User-Id") final Long userId,

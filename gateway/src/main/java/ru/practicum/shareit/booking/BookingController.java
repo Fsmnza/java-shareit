@@ -7,9 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 
-/**
- * Контроллер для работы с бронированиями через Gateway.
- */
 @Slf4j
 @RestController
 @RequestMapping("/bookings")
@@ -18,13 +15,6 @@ public class BookingController {
 
     private final BookingClient bookingClient;
 
-    /**
-     * Создать новое бронирование.
-     *
-     * @param userId ID пользователя, создающего бронирование
-     * @param dto    данные бронирования
-     * @return информация о созданном бронировании
-     */
     @PostMapping
     public ResponseEntity<Object> createBooking(
             @RequestHeader("X-Sharer-User-Id") Long userId,
@@ -33,14 +23,6 @@ public class BookingController {
         return bookingClient.createBooking(userId, dto);
     }
 
-    /**
-     * Одобрить или отклонить бронирование владельцем вещи.
-     *
-     * @param ownerId   ID владельца вещи
-     * @param bookingId ID бронирования
-     * @param approved  true — одобрено, false — отклонено
-     * @return информация о бронировании с обновленным статусом
-     */
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approveBooking(
             @RequestHeader("X-Sharer-User-Id") Long ownerId,
@@ -53,13 +35,6 @@ public class BookingController {
         return bookingClient.approveBooking(ownerId, bookingId, approved);
     }
 
-    /**
-     * Получить информацию о конкретном бронировании.
-     *
-     * @param userId    ID пользователя
-     * @param bookingId ID бронирования
-     * @return информация о бронировании
-     */
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(
             @RequestHeader("X-Sharer-User-Id") Long userId,
@@ -68,13 +43,6 @@ public class BookingController {
         return bookingClient.getBooking(userId, bookingId);
     }
 
-    /**
-     * Получить список бронирований пользователя по статусу.
-     *
-     * @param userId ID пользователя
-     * @param state  статус бронирований (ALL, CURRENT, PAST, FUTURE и др.)
-     * @return список бронирований пользователя
-     */
     @GetMapping
     public ResponseEntity<Object> getBookingsByBooker(
             @RequestHeader("X-Sharer-User-Id") Long userId,
@@ -86,13 +54,6 @@ public class BookingController {
         return bookingClient.getBookingsByBooker(userId, state);
     }
 
-    /**
-     * Получить список бронирований вещей владельца по статусу.
-     *
-     * @param userId ID владельца
-     * @param state  статус бронирований (ALL, CURRENT, PAST, FUTURE и др.)
-     * @return список бронирований для владельца
-     */
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsForOwner(
             @RequestHeader("X-Sharer-User-Id") Long userId,

@@ -14,10 +14,6 @@ import java.util.Map;
 @RestControllerAdvice
 public final class ErrorHandler {
 
-    /**
-     * @param e исключение NotFoundException
-     * @return сообщение об ошибке
-     */
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFound(final NotFoundException e) {
@@ -25,30 +21,18 @@ public final class ErrorHandler {
         return Map.of("error", e.getMessage());
     }
 
-    /**
-     * @param e исключение NotAuthorizedException
-     * @return сообщение об ошибке
-     */
     @ExceptionHandler(NotAuthorizedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Map<String, String> handleNotAuthorized(final NotAuthorizedException e) {
         return Map.of("error", e.getMessage());
     }
 
-    /**
-     * @param e исключение ValidationException
-     * @return сообщение об ошибке
-     */
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidation(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
 
-    /**
-     * @param e исключение MethodArgumentNotValidException
-     * @return сообщение с указанием поля и ошибки
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
@@ -59,20 +43,12 @@ public final class ErrorHandler {
         return Map.of("error", message);
     }
 
-    /**
-     * @param e исключение IllegalArgumentException
-     * @return сообщение об ошибке
-     */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleIllegalArgument(final IllegalArgumentException e) {
         return Map.of("error", e.getMessage());
     }
 
-    /**
-     * @param e общее исключение
-     * @return стандартное сообщение об ошибке сервера
-     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleException(final Exception e) {

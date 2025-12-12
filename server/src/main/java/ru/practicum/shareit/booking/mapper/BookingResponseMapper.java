@@ -5,17 +5,8 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserDto;
 
-/**
- * Утилитный класс для преобразования {@link Booking} в {@link BookingResponseDto}.
- */
 public class BookingResponseMapper {
 
-    /**
-     * Преобразует объект {@link Booking} в DTO для ответа {@link BookingResponseDto}.
-     *
-     * @param booking сущность бронирования
-     * @return DTO с полной информацией о бронировании, или null если booking равен null
-     */
     public static BookingResponseDto toBookingResponseDto(Booking booking) {
         if (booking == null) {
             return null;
