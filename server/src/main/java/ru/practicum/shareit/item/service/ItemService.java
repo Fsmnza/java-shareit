@@ -5,17 +5,61 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.exception.NotAuthorizedException;
 
 import java.util.List;
-
 public interface ItemService {
-    ItemDto createItem(Long userId, ItemDto dto);
 
-    ItemDto updateItem(Long userId, Long itemId, ItemDto dto) throws NotAuthorizedException;
+    /**
+     * Создать новую вещь.
+     *
+     * @param userId идентификатор пользователя
+     * @param dto данные вещи
+     * @return созданная вещь
+     */
+    ItemDto createItem(final Long userId, final ItemDto dto);
 
-    ItemDto getItemById(Long userId, Long itemId);
+    /**
+     * Обновить вещь.
+     *
+     * @param userId идентификатор пользователя
+     * @param itemId идентификатор вещи
+     * @param dto данные для обновления
+     * @return обновленная вещь
+     * @throws NotAuthorizedException если пользователь не владелец вещи
+     */
+    ItemDto updateItem(final Long userId, final Long itemId, final ItemDto dto)
+            throws NotAuthorizedException;
 
-    List<ItemDto> getItemsByOwner(Long userId);
+    /**
+     * Получить вещь по идентификатору.
+     *
+     * @param userId идентификатор пользователя
+     * @param itemId идентификатор вещи
+     * @return вещь
+     */
+    ItemDto getItemById(final Long userId, final Long itemId);
 
-    List<ItemDto> searchItems(String text);
+    /**
+     * Получить все вещи владельца.
+     *
+     * @param userId идентификатор владельца
+     * @return список вещей
+     */
+    List<ItemDto> getItemsByOwner(final Long userId);
 
-    CommentDto addComment(Long userId, Long itemId, CommentDto commentDto);
+    /**
+     * Поиск вещей по тексту.
+     *
+     * @param text текст для поиска
+     * @return список вещей
+     */
+    List<ItemDto> searchItems(final String text);
+
+    /**
+     * Добавить комментарий к вещи.
+     *
+     * @param userId идентификатор пользователя
+     * @param itemId идентификатор вещи
+     * @param commentDto данные комментария
+     * @return добавленный комментарий
+     */
+    CommentDto addComment(final Long userId, final Long itemId, final CommentDto commentDto);
 }

@@ -1,46 +1,70 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
+public final class UserController {
+
     private final UserService userService;
 
+    /**
+     * Получить список всех пользователей.
+     *
+     * @return список пользователей
+     */
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> user = userService.getAllUsers();
-        return ResponseEntity.ok(user);
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
+    /**
+     * Получить пользователя по идентификатору.
+     *
+     * @param id идентификатор пользователя
+     * @return пользователь
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        UserDto user = userService.getById(id);
-        return ResponseEntity.ok(user);
+    public UserDto getUserById(@PathVariable final Long id) {
+        return userService.getById(id);
     }
 
+    /**
+     * Создать нового пользователя.
+     *
+     * @param dto данные пользователя
+     * @return созданный пользователь
+     */
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
-        dto = userService.createUser(dto);
-        return ResponseEntity.ok(dto);
+    public UserDto createUser(@RequestBody final UserDto dto) {
+        return userService.createUser(dto);
     }
 
+    /**
+     * Обновить пользователя по идентификатору.
+     *
+     * @param user новые данные пользователя
+     * @param id идентификатор пользователя
+     * @return обновлённый пользователь
+     */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user,@PathVariable Long id) {
-        user = userService.updateUserById(user, id);
-        return ResponseEntity.ok(user);
+    public UserDto updateUser(@RequestBody final UserDto user,
+                              @PathVariable final Long id) {
+        return userService.updateUserById(id, user);
     }
 
+    /**
+     * Удалить пользователя по идентификатору.
+     *
+     * @param id идентификатор пользователя
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable final Long id) {
         userService.removeNyId(id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
+
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -45,7 +46,8 @@ public class ItemServiceImpl implements ItemService {
         ItemRequest request = null;
         if (itemDto.getRequestId() != null) {
             request = itemRequestRepository.findById(itemDto.getRequestId())
-                    .orElseThrow(() -> new NotFoundException("Запрос не найден: " + itemDto.getRequestId()));
+                    .orElseThrow(() -> new NotFoundException(
+                            "Запрос не найден: " + itemDto.getRequestId()));
         }
 
         Item item = ItemMapper.toItem(itemDto, owner, request);
@@ -53,26 +55,16 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemDto(item);
     }
 
-
     @Override
     @Transactional
     public ItemDto updateItem(final Long userId, final Long itemId, final ItemDto dto) {
-        System.out.println("=== UPDATE ITEM ===");
-        System.out.println("userId: " + userId);
-        System.out.println("itemId: " + itemId);
-        System.out.println("dto.name: " + dto.getName());
-        System.out.println("dto.description: " + dto.getDescription());
-        System.out.println("dto.available: " + dto.getAvailable());
-
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена: " + itemId));
 
-        System.out.println("Before update - item.name: " + item.getName());
-        System.out.println("Before update - item.description: " + item.getDescription());
-        System.out.println("Before update - item.available: " + item.getAvailable());
         if (!item.getOwner().getId().equals(userId)) {
             throw new NotAuthorizedException("Только владелец может редактировать вещь");
         }
+
         if (dto.getName() != null) {
             item.setName(dto.getName());
         }
@@ -82,9 +74,9 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getAvailable() != null) {
             item.setAvailable(dto.getAvailable());
         }
+
         Item savedItem = itemRepository.save(item);
-        ItemDto result = ItemMapper.toItemDto(savedItem);
-        return result;
+        return ItemMapper.toItemDto(savedItem);
     }
 
     @Override
@@ -100,6 +92,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemsByOwner(final Long userId) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
+
         List<Item> items = itemRepository.findByOwnerId(owner.getId());
         List<Long> itemIds = items.stream().map(Item::getId).toList();
         List<Comment> allComments = commentRepository.findByItemIdIn(itemIds);
@@ -108,6 +101,7 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> allBookings = bookingRepository.findByItemIdInAndStatus(itemIds, Status.APPROVED);
         Map<Long, List<Booking>> bookingsMap = allBookings.stream()
                 .collect(Collectors.groupingBy(b -> b.getItem().getId()));
+
         return items.stream()
                 .map(item -> {
                     List<Comment> comments = commentsMap.getOrDefault(item.getId(), List.of());
@@ -145,7 +139,8 @@ public class ItemServiceImpl implements ItemService {
         );
 
         if (!hasBooking) {
-            throw new ValidationException("Комментирование разрешено только после окончания бронирования");
+            throw new ValidationException(
+                    "Комментирование разрешено только после окончания бронирования");
         }
 
         Comment comment = CommentMapper.toComment(commentDto, user, item);

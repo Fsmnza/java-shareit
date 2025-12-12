@@ -5,13 +5,43 @@ import ru.practicum.shareit.user.UserDto;
 import java.util.List;
 
 public interface UserService {
+
+    /**
+     * Получить список всех пользователей.
+     *
+     * @return список пользователей
+     */
     List<UserDto> getAllUsers();
 
-    UserDto getById(long id);
+    /**
+     * Получить пользователя по идентификатору.
+     *
+     * @param id идентификатор пользователя
+     * @return пользователь
+     */
+    UserDto getById(final Long id);
 
-    UserDto removeNyId(long id);
+    /**
+     * Удалить пользователя по идентификатору.
+     *
+     * @param id идентификатор пользователя
+     */
+    void removeNyId(final Long id);
 
-    UserDto createUser(UserDto user);
+    /**
+     * Создать нового пользователя.
+     *
+     * @param userDto данные пользователя
+     * @return созданный пользователь
+     */
+    UserDto createUser(final UserDto userDto);
 
-    UserDto updateUserById(UserDto user, long id);
+    /**
+     * Обновить пользователя по идентификатору.
+     *
+     * @param id идентификатор пользователя
+     * @param userDto новые данные пользователя
+     * @return обновлённый пользователь
+     */
+    UserDto updateUserById(final Long id, final UserDto userDto);
 }

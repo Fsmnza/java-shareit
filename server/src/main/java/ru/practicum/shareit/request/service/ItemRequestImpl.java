@@ -14,20 +14,20 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ItemRequestImpl implements ItemRequestService {
+
     private final ItemRequestRepository requestRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
     @Override
     @Transactional
-    public ItemRequestDto createRequest(final Long userId, ItemRequestDto dto) {
+    public ItemRequestDto createRequest(final Long userId, final ItemRequestDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
         if (dto.getDescription() == null || dto.getDescription().isBlank()) {
