@@ -61,4 +61,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>check</id>
+        </profile>
+    </profiles>
+
 </project>
