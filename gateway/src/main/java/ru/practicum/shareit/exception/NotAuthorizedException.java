@@ -1,6 +1,10 @@
 package ru.practicum.shareit.exception;
-//@param
+
 public class NotAuthorizedException extends RuntimeException {
+
+    /**
+     * @param message Ошибка Не авторизован
+     */
     public NotAuthorizedException(final String message) {
         super(message);
     }
