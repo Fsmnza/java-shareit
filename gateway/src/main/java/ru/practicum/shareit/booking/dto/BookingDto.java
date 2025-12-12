@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.dto;
 
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -22,9 +23,8 @@ public class BookingDto {
     private Long itemId;
     @NotNull(message = "Дата начала бронирования обязательна")
     private LocalDateTime start;
-
     @NotNull(message = "Дата окончания бронирования обязательна")
-    @Future(message = "Дата окончания бронирования должна быть в будущем")
+    @FutureOrPresent(message = "Дата окончания бронирования должна быть в будущем")
     private LocalDateTime end;
     private Status status;
 }
