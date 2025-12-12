@@ -8,6 +8,11 @@
     <artifactId>shareit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <profiles>
+        <profile>
+            <id>coverage</id>
+        </profile>
+    </profiles>
 
     <modules>
         <module>server</module>

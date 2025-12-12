@@ -42,7 +42,10 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> searchItems(@RequestParam(required = false) String text) {
+    public ResponseEntity<List<ItemDto>> searchItems(@RequestParam(name = "text") String text) {
+        if (text == null || text.isBlank()) {
+            return ResponseEntity.ok(List.of());
+        }
         return ResponseEntity.ok(itemService.searchItems(text));
     }
 

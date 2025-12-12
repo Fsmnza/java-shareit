@@ -38,7 +38,6 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-
         Item item = ItemMapper.toItem(itemDto, owner, null);
         item = itemRepository.save(item);
         return ItemMapper.toItemDto(item);
@@ -117,10 +116,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItems(String text) {
-        if (text == null || text.isBlank()) {
-            return List.of();
-        }
-
         return itemRepository.searchAvailableByText(text.toLowerCase()).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());

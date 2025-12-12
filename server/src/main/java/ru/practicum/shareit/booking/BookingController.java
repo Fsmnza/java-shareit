@@ -10,14 +10,14 @@ import ru.practicum.shareit.booking.service.BookingService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/bookings")
+@RequestMapping("/bookings")
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public ResponseEntity<BookingResponseDto> createBooking(@RequestBody BookingDto dto,
-                                                            @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                            @RequestBody BookingDto dto) {
         BookingResponseDto created = service.createBooking(userId, dto);
         return ResponseEntity.ok(created);
     }

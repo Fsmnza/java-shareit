@@ -14,6 +14,7 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,10 +45,12 @@ public class ItemRequestImpl implements ItemRequestService {
     public List<ItemRequestDto> getRequestsByUser(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
-
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId).stream()
                 .map(req -> {
-                    List<Item> items = itemRepository.findByOwnerId(req.getId());
+                    List<Item> items = itemRepository.findByRequestId(req.getId());
+//                    if (items == null) {
+//                        items = new ArrayList<>();
+//                    }
                     return ItemRequestMapper.toDto(req, items);
                 })
                 .collect(Collectors.toList());
@@ -60,7 +63,7 @@ public class ItemRequestImpl implements ItemRequestService {
 
         return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId).stream()
                 .map(req -> {
-                    List<Item> items = itemRepository.findByOwnerId(req.getId());
+                    List<Item> items = itemRepository.findByRequestId(req.getId());
                     return ItemRequestMapper.toDto(req, items);
                 })
                 .collect(Collectors.toList());
