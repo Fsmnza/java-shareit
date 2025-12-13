@@ -4,7 +4,7 @@ shareit-server:
     dockerfile: server/Dockerfile
   container_name: shareit-server
   ports:
-    - "9090:9090"
+    - "8080:8080"
   environment:
     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shareit
     SPRING_DATASOURCE_USERNAME: malika
@@ -12,9 +12,3 @@ shareit-server:
   depends_on:
     postgres:
       condition: service_healthy
-  healthcheck:
-  test: ["CMD-SHELL", "curl -f http://localhost:9090/actuator/health || exit 1"]
-  interval: 5s
-  timeout: 2s
-  retries: 20
-
