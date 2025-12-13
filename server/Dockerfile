@@ -11,3 +11,5 @@ WORKDIR /app
 COPY --from=build /app/server/target/*.jar ./server.jar
 
 CMD ["java", "-jar", "server.jar"]
+
+
