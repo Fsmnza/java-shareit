@@ -12,7 +12,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY --from=build /app/gateway/target/*.jar ./gateway.jar
 
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+#COPY wait-for-it.sh /wait-for-it.sh
+#RUN chmod +x /wait-for-it.sh
 
-CMD ["/wait-for-it.sh", "shareit-server:9090", "--", "java", "-jar", "gateway.jar"]
+#CMD ["/wait-for-it.sh", "shareit-server:8080", "--", "java", "-jar", "gateway.jar"]
