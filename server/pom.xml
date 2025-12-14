@@ -75,7 +75,6 @@
             <version>3.7.2</version>
         </dependency>
 
-        <!-- Тестирование + MockMvc -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -85,7 +84,6 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -93,8 +91,6 @@
                     <mainClass>ru.practicum.shareit.ShareItApp</mainClass>
                 </configuration>
             </plugin>
-
-            <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
