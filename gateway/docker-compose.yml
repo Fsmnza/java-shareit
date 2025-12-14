@@ -1,0 +1,12 @@
+shareit-gateway:
+  build:
+    context: .
+    dockerfile: gateway/Dockerfile
+  container_name: shareit-gateway
+  ports:
+    - "9090:9090"
+  environment:
+    SHAREIT_SERVER_URL: http://shareit-server:8080
+  depends_on:
+    shareit-server:
+      condition: service_healthy

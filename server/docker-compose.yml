@@ -1,0 +1,14 @@
+shareit-server:
+  build:
+    context: .
+    dockerfile: server/Dockerfile
+  container_name: shareit-server
+  ports:
+    - "8080:8080"
+  environment:
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shareit
+    SPRING_DATASOURCE_USERNAME: malika
+    SPRING_DATASOURCE_PASSWORD: password
+  depends_on:
+    postgres:
+      condition: service_healthy
